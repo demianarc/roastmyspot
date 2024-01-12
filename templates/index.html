@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Honest reviews</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #74ebd5, #acb6e5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden; /* Prevent scrolling */
+        }
+
+        #container {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 90%; /* Adjust width as needed */
+            max-width: 600px; /* Set a maximum width */
+            margin: auto; /* Ensure container is always centered */
+            overflow: hidden; /* Hide overflow */
+        }
+
+        .centered-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #restaurantSearch, #getSummary {
+            width: calc(100% - 40px); /* Adjust width to account for padding */
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #getSummary {
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 5px; /* Add some space above the button */
+        }
+
+        #summary {
+            position: relative; /* Required for absolute positioning of pseudo-elements */
+            margin-top: 20px;
+            text-align: left;
+            background-color: #f2f2f2; /* Chat bubble color */
+            padding: 20px;
+            border-radius: 18px; /* Rounded corners for bubble */
+            max-height: 300px;
+            overflow-y: auto;
+            display: none; /* Initially hidden */
+            width: calc(100% - 40px); /* Adjust width to account for padding */
+        }
+
+        /* Add a 'tail' to the chat bubble */
+        #summary::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50px; /* Position of the tail */
+            width: 0;
+            height: 0;
+            border: 15px solid transparent;
+            border-top-color: #f2f2f2;
+            border-bottom: 0;
+            margin-left: -15px;
+            margin-bottom: -15px;
+        }
+
+        #spinner {
+            display: inline-block; /* Display inline with the button */
+            vertical-align: middle; /* Center vertically relative to the button */
+            margin-left: 10px; /* Add some space between the button and the spinner */
+        }
+
+        .loader {
+            border: 5px solid #f3f3f3; /* Light grey */
+            border-top: 5px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 30px; /* Adjusted size */
+            height: 30px; /* Adjusted size */
+            animation: spin 2s linear infinite;
+        }
+
+        .centered-content h1 {
+    margin-bottom: 10px; /* Adjust this value as needed */
+}
+
+.centered-content p {
+    margin-top: 0; /* Eliminates the top margin */
+}
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div class="centered-content">
+            <h1>Honest reviews 👀</h1>
+            <p style="color: #555; font-style: italic;">
+                Get unfiltered opinions straight from the crowd's mouth. No BS!
+            </p>
+            <input type="text" id="restaurantSearch" placeholder="Enter place name">
+            <button id="getSummary">Get the truth</button>
+            <div id="summary"></div>
+            <div id="spinner" style="display:none;">
+                <div class="loader"></div>
+            </div>
+        </div>   
+    </div>
+     
+
+    <script>
+        let placeId = '';
+
+        function initAutocomplete() {
+            const input = document.getElementById('restaurantSearch');
+            const autocomplete = new google.maps.places.Autocomplete(input);
+
+            autocomplete.addListener('place_changed', function() {
+                const place = autocomplete.getPlace();
+                placeId = place.place_id;
+            });
+        }
+        function loadGoogleMapsScript() {
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key={{ google_maps_key }}&libraries=places&callback=initAutocomplete`;
+            script.async = true;
+            document.head.appendChild(script);
+        }
+
+        $(document).ready(function() {
+            loadGoogleMapsScript();  // Call this function to load the script
+
+            $('#getSummary').click(function() {
+                $('#spinner').show(); // Show spinner before the AJAX request
+                if (!placeId) {
+                    $('#summary').text('Please select a place from the dropdown.');
+                    $('#spinner').hide(); // Hide spinner if no placeId
+                    return;
+                }
+
+                $.ajax({
+                    url: '/get-reviews',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ 'place_id': placeId }),
+                    success: function(response) {
+                        $('#summary').text(response.summary).css('display', 'block');
+                        $('#spinner').hide(); // Hide spinner on success
+                    },
+                    error: function() {
+                        $('#summary').text('Error fetching summary.');
+                        $('#spinner').hide(); // Hide spinner on error
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
