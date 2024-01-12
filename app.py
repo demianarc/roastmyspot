@@ -30,7 +30,7 @@ def process_with_gpt(reviews):
     prompt = f"Based on these reviews: {review_texts}, create a humorous and exaggerated 'roast' about the place. Make it funny and lighthearted, like a comedy roast, without being offensive. Focus on playful teasing, and use a mix of the real aspects mentioned in the reviews with a humorous twist. Keep it under 5 sentences."
 
     try:
-        response = client.chat_completions.create(
+        response = client.chat.completions.create(
             model="gpt-4-1106-preview",
             messages=[
                 {"role": "system", "content": "You are a witty and humorous assistant, skilled at making light-hearted roasts."},
