@@ -27,13 +27,13 @@ def get_reviews(place_id):
 # Function to process reviews with GPT-3.5 Turbo
 def process_with_gpt(reviews):
     review_texts = ' '.join([review['text'] for review in reviews])
-    prompt = f"Analyze and summarize these reviews: {review_texts}.Write an engaging and reasonably witty brief as if you're texting a friend. The summary should be balanced, covering both positive and negative aspects in a light and humorous way. Avoid focusing on specifics from individual reviews. Instead, provide a general impression that captures the overall sentiment. Use casual language and reasonable amount of emojis to make it fun. Keep it under 5 sentences. Conclude with a brief personal recommendation (go or not). Remember, it should sound like an honest and casual conversation between friends, not a formal review."
+    prompt = f"Based on these reviews: {review_texts}, create a humorous and exaggerated 'roast' about the place. Make it funny and lighthearted, like a comedy roast, without being offensive. Focus on playful teasing, and use a mix of the real aspects mentioned in the reviews with a humorous twist. Keep it under 5 sentences."
 
     try:
-        response = client.chat.completions.create(
-            model="gpt-3.5-turbo-1106",
+        response = client.chat_completions.create(
+            model="gpt-4-1106-preview",
             messages=[
-                {"role": "system", "content": "You are a creative and engaging friend."},
+                {"role": "system", "content": "You are a witty and humorous assistant, skilled at making light-hearted roasts."},
                 {"role": "user", "content": prompt}
             ]
         )
