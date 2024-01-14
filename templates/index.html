@@ -124,7 +124,7 @@
         <div class="centered-content">
             <h1>Roast my spot 🔥🤣</h1>
             <p id="description" style="color: #555; font-style: italic;">
-                Whether it's your local café, the town's museum, or the infamous fast-food joint down the street, "Roast My Spot" adds a playful twist to every review. 
+                Whether it's your local café, the town's museum, or the infamous fast-food joint down the street, "Roast My Spot" adds a playful twist to every review. <br> For an honest opinion, <a href="https://honestreviews-phi.vercel.app" target="_blank">visit this app</a>. 
             </p>
             <div>
                 <span id="flag-uk" style="cursor:pointer;">🇬🇧</span>
@@ -148,11 +148,11 @@
         // Translations object
         const translations = {
     'en': {
-        'description': "Whether it's your local café, the town's museum, or the infamous fast-food joint down the street, 'Roast My Spot' adds a playful twist to every review.",
+        'description': `Whether it's your local café, the town's museum, or the infamous fast-food joint down the street, "Roast My Spot" adds a playful twist to every review.  <br> For an honest opinion, <a href="https://honestreviews-phi.vercel.app" target="_blank">visit this app</a>.`,
         'placeholder': "Enter place name"
     },
     'fr': {
-        'description': "Que ce soit votre café local, le musée de la ville, ou le célèbre fast-food au coin de la rue, 'Roast My Spot' ajoute une touche enjouée à chaque avis.",
+        'description': `Que ce soit votre café local, le musée de la ville, ou le célèbre fast-food au coin de la rue, 'Roast My Spot' ajoute une touche enjouée à chaque avis. <br> Pour un avis honnête, <a href="https://honestreviews-phi.vercel.app" target="_blank">visitez cette application</a>.`,
         'placeholder': "Entrez le nom du lieu"
     }
 };
@@ -162,11 +162,12 @@
             
             // Function to switch language
             function switchLanguage(lang) {
-            currentLanguage = lang;
-            $('#description').text(translations[lang]['description']);
-            $('#restaurantSearch').attr('placeholder', translations[lang]['placeholder']);
-            console.log("Language switched to:", currentLanguage); // Debugging
-        }
+    currentLanguage = lang;
+    $('#description').html(translations[lang]['description']);
+    $('#restaurantSearch').attr('placeholder', translations[lang]['placeholder']);
+    console.log("Language switched to:", currentLanguage); // Debugging
+}
+
 
     
             // Attach event listeners to the flags
