@@ -124,9 +124,13 @@
     <div id="container">
         <div class="centered-content">
             <h1>Roast my spot 🔥🤣</h1>
-            <p style="color: #555; font-style: italic;">
+            <p id="description" style="color: #555; font-style: italic;">
                 Whether it's your local café, the town's museum, or the infamous fast-food joint down the street, "Roast My Spot" adds a playful twist to every review. 
             </p>
+            <div>
+                <span id="flag-uk" style="cursor:pointer;">🇬🇧</span>
+                <span id="flag-fr" style="cursor:pointer;">🇫🇷</span>
+            </div>
             <input type="text" id="restaurantSearch" placeholder="Enter place name">
             <button id="getSummary">ROAST 🔥</button>
             <div id="summary"></div>
@@ -139,50 +143,83 @@
 
     <script>
         let placeId = '';
+        // Initialize the default language
+        let currentLanguage = 'en';
+    
+        // Translations object
+        const translations = {
+    'en': {
+        'description': "Whether it's your local café, the town's museum, or the infamous fast-food joint down the street, 'Roast My Spot' adds a playful twist to every review.",
+        'placeholder': "Enter place name"
+    },
+    'fr': {
+        'description': "Que ce soit votre café local, le musée de la ville, ou le célèbre fast-food au coin de la rue, 'Roast My Spot' ajoute une touche enjouée à chaque avis.",
+        'placeholder': "Entrez le nom du lieu"
+    }
+};
 
+    
+        $(document).ready(function() {
+            
+            // Function to switch language
+            function switchLanguage(lang) {
+            currentLanguage = lang;
+            $('#description').text(translations[lang]['description']);
+            $('#restaurantSearch').attr('placeholder', translations[lang]['placeholder']);
+            console.log("Language switched to:", currentLanguage); // Debugging
+        }
+
+    
+            // Attach event listeners to the flags
+            $('#flag-uk').click(() => switchLanguage('en'));
+            $('#flag-fr').click(() => switchLanguage('fr'));
+    
+            // Load Google Maps script
+            loadGoogleMapsScript();
+    
+            // Event listener for 'getSummary' button
+            $('#getSummary').click(function() {
+            console.log("Request language:", currentLanguage); // Debugging
+            $('#spinner').show(); // Show spinner before the AJAX request
+            if (!placeId) {
+                $('#summary').text('Please select a place from the dropdown.');
+                $('#spinner').hide(); // Hide spinner if no placeId
+                return;
+                }
+    
+                $.ajax({
+                url: '/get-reviews',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ 'place_id': placeId, 'lang': currentLanguage }), // Include currentLanguage in the request
+                success: function(response) {
+                    $('#summary').text(response.summary).css('display', 'block');
+                    $('#spinner').hide(); // Hide spinner on success
+                },
+                error: function() {
+                    $('#summary').text('Error fetching summary.');
+                    $('#spinner').hide(); // Hide spinner on error
+                }
+                });
+            });
+        });
+    
         function initAutocomplete() {
             const input = document.getElementById('restaurantSearch');
             const autocomplete = new google.maps.places.Autocomplete(input);
-
+    
             autocomplete.addListener('place_changed', function() {
                 const place = autocomplete.getPlace();
                 placeId = place.place_id;
             });
         }
+    
         function loadGoogleMapsScript() {
             const script = document.createElement('script');
             script.src = `https://maps.googleapis.com/maps/api/js?key={{ google_maps_key }}&libraries=places&callback=initAutocomplete`;
             script.async = true;
             document.head.appendChild(script);
         }
-
-        $(document).ready(function() {
-            loadGoogleMapsScript();  // Call this function to load the script
-
-            $('#getSummary').click(function() {
-                $('#spinner').show(); // Show spinner before the AJAX request
-                if (!placeId) {
-                    $('#summary').text('Please select a place from the dropdown.');
-                    $('#spinner').hide(); // Hide spinner if no placeId
-                    return;
-                }
-
-                $.ajax({
-                    url: '/get-reviews',
-                    method: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify({ 'place_id': placeId }),
-                    success: function(response) {
-                        $('#summary').text(response.summary).css('display', 'block');
-                        $('#spinner').hide(); // Hide spinner on success
-                    },
-                    error: function() {
-                        $('#summary').text('Error fetching summary.');
-                        $('#spinner').hide(); // Hide spinner on error
-                    }
-                });
-            });
-        });
-    </script>
+    </script>    
 </body>
 </html>

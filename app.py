@@ -25,15 +25,24 @@ def get_reviews(place_id):
     return reviews
 
 # Function to process reviews with GPT-3.5 Turbo
-def process_with_gpt(reviews):
+def process_with_gpt(reviews, language):
+    print("Language in process_with_gpt:", language)  # Debugging
     review_texts = ' '.join([review['text'] for review in reviews])
-    prompt = f"Based on these reviews: {review_texts}, create a hilarious and exaggerated 'roast' about the place. Make it funny and don't hold back, like a comedy roast (without being offensive). Use emojis when possible (but not too much, one or two per output max). Focus on playful teasing, and use a mix of the real aspects mentioned in the reviews with a humorous twist. Keep it under 5 sentences."
+
+    if language == 'fr':
+        # French version of the prompt and role
+        prompt = f"D'après ces avis : {review_texts}, créez un 'roast' hilarant et exagéré sur le lieu en français. Rendez-le drôle et sans retenue, comme un roast comique (sans être offensant). Utilisez des emojis si possible (mais pas trop, un ou deux maximum par message). Concentrez-vous sur les taquineries amusantes et mélangez les aspects réels mentionnés dans les avis avec une touche humoristique. Max 5 phrases."
+        role_message = "Tu es un comédien et humoriste, habitué à faire des roasts hilarants."
+    else:
+        # English version of the prompt and role
+        prompt = f"Based on these reviews: {review_texts}, create a hilarious and exaggerated 'roast' about the place. Make it funny and don't hold back, like a comedy roast (without being offensive). Use emojis when possible (but not too much, one or two per output max). Focus on playful teasing, and use a mix of the real aspects mentioned in the reviews with a humorous twist. Keep it under 5 sentences."
+        role_message = "You are a witty and humorous comedian, skilled at making hilarious roasts."
 
     try:
         response = client.chat.completions.create(
             model="gpt-3.5-turbo-1106",
             messages=[
-                {"role": "system", "content": "You are a witty and humorous comedian, skilled at making hilarious roasts."},
+                {"role": "system", "content": role_message},
                 {"role": "user", "content": prompt}
             ]
         )
@@ -42,14 +51,19 @@ def process_with_gpt(reviews):
         print(f"An error occurred: {e}")
         return "An error occurred while processing the reviews. Please try again later."
 
+
 @app.route('/get-reviews', methods=['POST'])
 def get_reviews_endpoint():
     data = request.json
     place_id = data['place_id']
+    language = data.get('lang', 'en')
+    print("Received language:", language)  # Debugging
+
     if not place_id:
         return jsonify({'error': 'Place ID is required'}), 400
+
     reviews = get_reviews(place_id)
-    summary = process_with_gpt(reviews)
+    summary = process_with_gpt(reviews, language)  # Pass language to the processing function
     return jsonify({'summary': summary})
 
 if __name__ == '__main__':
