@@ -52,6 +52,24 @@
             align-items: center;
         }
 
+        .centered-content p {
+    margin-top: 0; /* Eliminates the top margin */
+    font-size: 16px; /* Adjust main text size as needed */
+}
+
+.centered-content p a {
+    color: #87CEEB; /* Light blue color for links */
+    text-decoration: none; /* Optional: Removes underline */
+}
+
+.centered-content p a:hover {
+    text-decoration: underline; /* Adds underline on hover */
+}
+
+.small-text {
+    font-size: 14px; /* Smaller text size for specific parts */
+}
+
         #restaurantSearch, #getSummary {
             width: calc(100% - 40px); /* Adjust width to account for padding */
             padding: 10px;
@@ -132,12 +150,22 @@
         }
     </style>
 </head>
+<meta property="og:title" content="Roast My Spot" />
+    <meta property="og:description" content="Add a playful twist to every review on Roast My Spot." />
+    <meta property="og:image" content="URL_TO_YOUR_IMAGE" />
+    <meta property="og:url" content="https://www.roastmyspot.com" />
+    <meta property="og:type" content="website" />
 <body>
     <div id="container">
         <div class="centered-content">
             <h1>Roast my spot 🔥🤣</h1>
             <p id="description" style="color: #555; font-style: italic;">
-                Whether it's your local café, the town's museum, or the infamous fast-food joint down the street, "Roast My Spot" adds a playful twist to every review. <br> For an honest opinion, <a href="https://honestreviews-phi.vercel.app" target="_blank">visit this app</a>. 
+                Whether it's your local café, the town's museum, or the infamous fast-food joint down the street, "Roast My Spot" adds a playful twist to every review.
+                <br>
+                <span class="small-text">
+                    For an honest opinion, <a href="https://honestreviews-phi.vercel.app" target="_blank">visit this app</a>.
+                    dev by <a href="https://www.linkedin.com/in/dylanbristot/" target="_blank">Dylan</a>.
+                </span>
             </p>
             <div>
                 <span id="flag-uk" style="cursor:pointer;">🇬🇧</span>
@@ -152,7 +180,7 @@
         </div>   
     </div>
     <footer>
-        Dev by <a href="https://www.linkedin.com/in/dylanbristot/" target="_blank">Dylan</a>
+        
     </footer> 
 
     <script>
@@ -163,13 +191,14 @@
         // Translations object
         const translations = {
     'en': {
-        'description': `Whether it's your local café, the town's museum, or the infamous fast-food joint down the street, "Roast My Spot" adds a playful twist to every review.  <br> For an honest opinion, <a href="https://honestreviews-phi.vercel.app" target="_blank">visit this app</a>.`,
+        'description': `Whether it's your local café, the town's museum, or the infamous fast-food joint down the street, "Roast My Spot" adds a playful twist to every review. <br><span class="small-text">For an honest opinion, <a href="https://honestreviews-phi.vercel.app" target="_blank">visit this app</a>. dev by <a href="https://www.linkedin.com/in/dylanbristot/" target="_blank">Dylan</a>.</span>`,
         'placeholder': "Enter place name"
     },
     'fr': {
-        'description': `Que ce soit votre café local, le musée de la ville, ou le célèbre fast-food au coin de la rue, 'Roast My Spot' ajoute une touche enjouée à chaque avis. <br> Pour un avis honnête, <a href="https://honestreviews-phi.vercel.app" target="_blank">visitez cette application</a>.`,
-        'placeholder': "Entrez le nom du lieu"
-    }
+        'description': `Que
+ce soit votre café local, le musée de la ville, ou le célèbre fast-food au coin de la rue, 'Roast My Spot' ajoute une touche enjouée à chaque avis. <br><span class="small-text">Pour un avis honnête, <a href="https://honestreviews-phi.vercel.app" target="_blank">visitez cette application</a>. Développé par <a href="https://www.linkedin.com/in/dylanbristot/" target="_blank">Dylan</a>.</span>`,
+'placeholder': "Entrez le nom du lieu"
+}
 };
 
     
