@@ -35,7 +35,7 @@ def process_with_gpt(reviews, language):
         role_message = "Tu es un comédien et humoriste, habitué à faire des roasts hilarants."
     else:
         # English version of the prompt and role
-        prompt = f"Based on these reviews: {review_texts}, create a hilarious and exaggerated 'roast' about the place. Make it funny and don't hold back, like a comedy roast (without being offensive). Use emojis when possible (but not too much, one or two per output max). Focus on playful teasing, and use a mix of the real aspects mentioned in the reviews with a humorous twist. Keep it under 5 sentences."
+        prompt = f"Drawing from the content of these reviews: {review_texts}, your role is to craft an amusing and exaggerated roast about the establishment in question. Aim for humor that is sharp yet inoffensive, capturing the essence of a comedy roast. You are encouraged to use emojis to add a touch of whimsy, but please keep them to a minimum (one or two maximum per response). Your primary focus should be on light-hearted teasing, blending the actual details mentioned in the reviews with a comedic spin. Ensure that your roast is succinct, ideally confined to a maximum of five sentences."
         role_message = "You are a witty and humorous comedian, skilled at making hilarious roasts."
 
     try:
